@@ -1,3 +1,5 @@
+import pickle
+from typing import BinaryIO
 class Animal():
     def __init__(self, name, age):
         self.name = name
@@ -73,7 +75,21 @@ class Zoo():
         for staff in self.staff:
             print(f" Staff member {staff.name} of age {staff.age} is {staff.__class__.__name__} ")
 
-zoo = Zoo()
+    def save_zoo_state(self, file_name = "zoo_state.pkl"):
+        with open(file_name, 'wb') as file:
+            pickle.dump(self, file)
+            print(f"Zoo state saved!")
+
+    def load_zoo_state(file_name = "zoo_state.pkl"):
+        try:
+            with open(file_name, 'rb') as file:
+                return pickle.load(file)
+
+        except FileNotFoundError:
+            print("No saved zoo state file found.")
+            return Zoo()
+
+zoo = Zoo.load_zoo_state()
 
 animal1 = Bird("Kesha", 8)
 animal2 = Mammal("Barsik", 5)
@@ -105,6 +121,8 @@ zoo.animals_info()
 zoo.remove_staff(staff4)
 zoo.remove_staff(staff2)
 zoo.staff_info()
+
+zoo.save_zoo_state()
 
 
 
